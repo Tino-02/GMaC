@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage News and Events</title>
+   <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Admin Dashboard</h1>
+        <ul>
+            <li><a href="#" class="active">Manage News & Events</a></li>
+            <li><a href="#">User Management</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Manage News and Events</h1>
+
+        <!-- Form to add new news or event -->
+        <form id="newsEventForm" enctype="multipart/form-data">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="body">Description:</label>
+            <textarea id="body" name="body" rows="4" required></textarea>
+
+            <label for="image">Select Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="news">News</option>
+                <option value="event">Event</option>
+            </select>
+
+            <button type="submit">Create</button>
+        </form>
+
+        <h2>Existing News</h2>
+        <div id="newsContainer">
+            <!-- News cards will be dynamically loaded here -->
+        </div>
+
+        <h2>Existing Events</h2>
+        <div id="eventContainer">
+            <!-- Event cards will be dynamically loaded here -->
+        </div>
+    </div>
+
+
+
+    <script>
+        /// Fetch existing news and events
+document.addEventListener('DOMContentLoaded', () => {
+    fetchNewsAndEvents();
+});
+
+// Function to fetch and display existing news and events
+function fetchNewsAndEvents() {
+    fetch('http://localhost:3000/api/getArticles')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const newsContainer = document.getElementById('newsContainer');
+            const eventContainer = document.getElementById('eventContainer');
+            newsContainer.innerHTML = '';
+            eventContainer.innerHTML = '';
+
+            data.forEach(article => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <img width=300px  src="${article.image_url}" alt="${article.title}">
+                    <h3>${article.title}</h3>
+                    <p>${article.body}</p>
+                    <button onclick="deleteArticle(${article.id})">Delete</button>
+                `;
+
+                if (article.category === 'news') {
+                    newsContainer.appendChild(card);
+                } else if (article.category === 'event') {
+                    eventContainer.appendChild(card);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching and parsing articles:', error);
+            alert('An error occurred while loading articles. Please try again later.');
+        });
+}
+
+// Function to handle form submission for creating new articles
+document.getElementById('newsEventForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('http://localhost:3000/api/createArticle', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        fetchNewsAndEvents();  // Refresh the list of articles
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while creating the article. Please try again later.');
+    });
+});
+
+
+
+// Function to delete an article
+// Function to delete an article
+function deleteArticle(articleId) {
+    // Display a confirmation dialog and store the user's response
+    const userConfirmed = confirm('Are you sure you want to delete this article?') ;
+    
+    // If the user confirmed, proceed with the deletion
+    if (userConfirmed) {
+        fetch(`http://localhost:3000/api/deleteArticle?id=${articleId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+            fetchNewsAndEvents();  // Refresh the list after deletion
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the article. Please try again later.');
+        });
+    } else {
+        console.log('User canceled the deletion.');
+    }
+}
+
+   
+
+
+    </script>
+
+</body>
+</html>
