@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghana Make A Change - Trips</title>
+    <link rel="stylesheet" href="css/trip.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div class="navbar-left">
+                    <a href="index.html" class="logo">Ghana Make A Change</a>
+                </div>
+                <div class="navbar-right">
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Our Work</a></li>
+                        <li><a href="trip.html">Get Involved</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a class="call_to_action" href="donation.html">Donate</a></li>
+                    </ul>
+                    <div class="hamburger">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Experience Ghana, Change Lives</h1>
+                <p>Join our humanitarian trips and make a lasting impact.</p>
+                <a href="#trips" class="cta-button">Explore Our Trips</a>
+            </div>
+        </section>
+
+        <section id="trips">
+            <div class="container">
+                <h2>Our Life-Changing Trips</h2>
+                <div class="trip-cards">
+                    <div class="trip-card">
+                        <img src="Assets/yt.jpg" alt="Youth Trip">
+                        <div class="card-content">
+                            <h3>Youth Trips</h3>
+                            <p>Two weeks of transformative experiences: drilling wells, building schools, and feeding children.</p>
+                            <ul>
+                                <li><i class="fas fa-user"></i> Ages 15-19</li>
+                                <li><i class="fas fa-calendar"></i> 2 weeks</li>
+                                <li><i class="fas fa-dollar-sign"></i> Cost: $3,500</li>
+                            </ul>
+                            <a href="#" class="btn">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="trip-card">
+                        <img src="Assets/humatrin.jpg" alt="Humanitarian Trip">
+                        <div class="card-content">
+                            <h3>Humanitarian Trip</h3>
+                            <p>Immerse yourself in meaningful activities, from construction to teaching, while experiencing Ghanaian culture.</p>
+                            <ul>
+                                <li><i class="fas fa-user"></i> Ages 19+</li>
+                                <li><i class="fas fa-calendar"></i> 2-4 weeks</li>
+                                <li><i class="fas fa-dollar-sign"></i> Cost: $3,500</li>
+                            </ul>
+                            <a href="#" class="btn">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="cta">
+            <div class="container">
+                <h2>Ready to Make a Difference?</h2>
+                <p>Join us on our next trip or support our cause by donating.</p>
+                <a href="contact.html" class="cta-button">Get Involved</a>
+            </div>
+        </section>
+
+        <section id="faq">
+            <div class="container">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <h3>What is included in the trip cost?</h3>
+                    <p>The trip cost includes accommodations, meals, ground transportation, project materials, and guided cultural experiences.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How many trips are organized each year?</h3>
+                    <p>We organize two to three trips annually, each providing unique opportunities to serve and explore Ghana.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do I need any special skills to volunteer?</h3>
+                    <p>No special skills are required. We welcome volunteers from all backgrounds and provide necessary training on-site.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>1-208-521-7843</p>
+                    <p>Ghanamakeachange@gmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Mailing Address</h3>
+                    <p>Ghana Make a Change</p>
+                    <p>635 DeCoria Ave</p>
+                    <p>Arco, Idaho 83213</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Ghana Make A Change. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+    
+        hamburger.addEventListener("click", mobileMenu);
+    
+        function mobileMenu() {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }
+    
+        // Close mobile menu when clicking on a nav link
+        const navLink = document.querySelectorAll(".nav-menu li a");
+    
+        navLink.forEach(n => n.addEventListener("click", closeMenu));
+    
+        function closeMenu() {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #8EC5FC, #E0C3FC);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Floating particle-like background effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/dark-denim-3.png');
+            opacity: 0.3;
+            pointer-events: none;
+            animation: particleMove 30s infinite alternate ease-in-out;
+        }
+
+        @keyframes particleMove {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Masonry layout for a free-flowing feel */
+        .gallery {
+            column-count: 3; /* Staggered column layout */
+            column-gap: 25px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery_item {
+            margin-bottom: 25px;
+            display: inline-block;
+            width: 100%;
+            transform: rotate(-2deg) scale(1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Images and videos with floating magical effects */
+        .gallery_item img,
+        .gallery_item video {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        .gallery_item:hover img,
+        .gallery_item:hover video {
+            transform: scale(1.1) rotate(5deg);
+            filter: brightness(1.3);
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Glowing hover effect */
+        .gallery_item:hover::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent);
+            filter: blur(40px);
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        /* Lightbox Modal */
+        .lightbox_modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .lightbox_content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            text-align: center;
+        }
+
+        .lightbox_img,
+        .lightbox_video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.5);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        /* Subtle glowing animation in lightbox */
+        @keyframes glow {
+            0% {
+                box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 20px 40px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        /* Close button for the lightbox */
+        .close_lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 2000;
+        }
+
+        .close_lightbox:hover {
+            color: #ffafbd;
+        }
+
+        /* Responsive tweaks for smaller screens */
+        @media (max-width: 768px) {
+            .gallery {
+                column-count: 2;
+            }
+
+            .lightbox_img,
+            .lightbox_video {
+                max-height: 60vh;
+            }
+
+            .close_lightbox {
+                font-size: 35px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery {
+                column-count: 1;
+            }
+
+            .lightbox_img,
+            .lightbox_video {
+                max-height: 50vh;
+            }
+
+            .close_lightbox {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="gallery">
+        <div class="gallery_item">
+            <img src="/Assets/check.jpg" alt="Gallery Image 1" class="gallery_image" onclick="openLightbox(this)">
+        </div>
+        <div class="gallery_item">
+            <img src="/Assets/CleanWater.jpg" alt="Gallery Image 2" class="gallery_image" onclick="openLightbox(this)">
+        </div>
+        <div class="gallery_item">
+            <video controls onclick="openLightbox(this)">
+                <source src="/Assets/Company Hype Video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="gallery_item">
+            <video controls onclick="openLightbox(this)">
+                <source src="/Assets/Company Hype Video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </section>
+    
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="lightbox_modal">
+        <span class="close_lightbox" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox_content">
+            <img id="lightboxImage" class="lightbox_img">
+            <video id="lightboxVideo" class="lightbox_video" controls></video>
+        </div>
+    </div>
+
+    <script>
+        function openLightbox(element) {
+            var lightbox = document.getElementById('lightboxModal');
+            var img = document.getElementById('lightboxImage');
+            var video = document.getElementById('lightboxVideo');
+        
+            lightbox.style.display = 'flex';
+        
+            if (element.tagName === 'IMG') {
+                img.src = element.src;
+                img.style.display = 'block';
+                video.style.display = 'none';
+            } else if (element.tagName === 'VIDEO') {
+                video.src = element.querySelector('source').src;
+                video.style.display = 'block';
+                img.style.display = 'none';
+            }
+        }
+
+        function closeLightbox() {
+            var lightbox = document.getElementById('lightboxModal');
+            var img = document.getElementById('lightboxImage');
+            var video = document.getElementById('lightboxVideo');
+
+            lightbox.style.display = 'none';
+            img.src = '';
+            video.src = '';
+        }
+    </script>
+</body>
+</html>

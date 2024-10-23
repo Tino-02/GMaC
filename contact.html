@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghana Make A Change - Contact Us</title>
+    <link rel="stylesheet" href="css/contact.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-left">
+                <a href="index.html" class="logo">Ghana Make A Change</a>
+            </div>
+            <div class="navbar-right">
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Our Work</a></li>
+                    <li><a href="trip.html">Get Involved</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a class="call_to_action" href="donation.html">Donate</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+    <main>
+        <section id="hero" class="cHero">
+            <div class="hero-content">
+                <h1>Contact Us</h1>
+                <p>Get in touch and be part of the change</p>
+            </div>
+        </section>
+
+        <section id="contact-info">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <i class="fab fa-facebook-f"></i>
+                        <h3>Visit Us on Facebook</h3>
+                        <p>Check us on our Facebook page</p>
+                        <a href="https://m.facebook.com/ghanamakeachange?mibextid=JRoKGi" class="contact-link">Click Here</a>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-phone"></i>
+                        <h3>Call Us</h3>
+                        <p>Reach us on a phone call through these numbers</p>
+                       
+                        <div class="contact-link">
+                          <a href="tel:1-208-521-7843" class="contact-link">1-208-521-7843</a>
+                        <a href="tel:1-208-521-6698" class="contact-link">1-208-521-6698</a>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email Us</h3>
+                        <p>You can send us an email</p>
+                        <a href="mailto:ghanamakeachange@gmail.com" class="contact-link">ghanamakeachange@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+      <div class="container">
+          <div class="footer-content">
+              <div class="footer-section">
+                  <h3>Contact Us</h3>
+                  <p>1-208-521-7843</p>
+                  <p>Ghanamakeachange@gmail.com</p>
+              </div>
+              <div class="footer-section">
+                  <h3>Mailing Address</h3>
+                  <p>Ghana Make a Change</p>
+                  <p>635 DeCoria Ave</p>
+                  <p>Arco, Idaho 83213</p>
+              </div>
+              <div class="footer-section">
+                  <h3>Follow Us</h3>
+                  <div class="social-icons">
+                      <a href="#"><i class="fab fa-facebook"></i></a>
+                      <a href="#"><i class="fab fa-instagram"></i></a>
+                      <a href="#"><i class="fab fa-twitter"></i></a>
+                      <a href="#"><i class="fab fa-tiktok"></i></a>
+                  </div>
+              </div>
+          </div>
+          <div class="footer-bottom">
+              <p>&copy; 2023 Ghana Make A Change. All rights reserved.</p>
+          </div>
+      </div>
+  </footer>
+
+    <script >
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+    
+        hamburger.addEventListener("click", mobileMenu);
+    
+        function mobileMenu() {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }
+    
+        // Close mobile menu when clicking on a nav link
+        const navLink = document.querySelectorAll(".nav-menu li a");
+    
+        navLink.forEach(n => n.addEventListener("click", closeMenu));
+    
+        function closeMenu() {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }
+    });
+
+
+    </script>
+</body>
+</html>

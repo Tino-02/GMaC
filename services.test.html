@@ -1,0 +1,14 @@
+import { JSDOM } from 'jsdom';
+import fs from 'fs';
+import path from 'path';
+
+describe('Services Page', () => {
+  let dom;
+  let document;
+
+  beforeAll(() => {
+    const html = fs.readFileSync(path.resolve(__dirname, 'services.html'), 'utf8');
+    dom = new JSDOM(html);
+    document = dom.window.document;
+  });
+});

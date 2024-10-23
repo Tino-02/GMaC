@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Admin Dashboard</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" id="manageNewsEvents" class="active"><i class="fas fa-newspaper"></i> Manage News & Events</a></li>
+                    <li><a href="#" id="uploadGallery"><i class="fas fa-images"></i> Upload to Gallery</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div id="newsEventsContent">
+                <h2>Manage News and Events</h2>
+                <form id="newsEventForm" enctype="multipart/form-data" class="admin-form">
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="body">Description:</label>
+                        <textarea id="body" name="body" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Select Image:</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category" name="category" required>
+                            <option value="news">News</option>
+                            <option value="event">Event</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+
+                <h3>Existing News</h3>
+                <div id="newsContainer" class="card-grid"></div>
+
+                <h3>Existing Events</h3>
+                <div id="eventContainer" class="card-grid"></div>
+            </div>
+
+            <div id="galleryContent" style="display: none;">
+                <h2>Upload to Gallery</h2>
+                <form id="galleryUploadForm" enctype="multipart/form-data" class="admin-form">
+                    <div class="form-group">
+                        <label for="galleryImage">Select Image:</label>
+                        <input type="file" id="galleryImage" name="galleryImage" accept="image/*" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageDescription">Image Description:</label>
+                        <input type="text" id="imageDescription" name="imageDescription" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload to Gallery</button>
+                </form>
+
+                <h3>Existing Gallery Images</h3>
+                <div id="galleryContainer" class="gallery-grid"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /// Fetch existing news and events
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNewsAndEvents();
+            fetchGalleryImages();
+        });
+
+        // Function to fetch and display existing news and events
+        function fetchNewsAndEvents() {
+            fetch('http://localhost:3000/api/getArticles')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const newsContainer = document.getElementById('newsContainer');
+                    const eventContainer = document.getElementById('eventContainer');
+                    newsContainer.innerHTML = '';
+                    eventContainer.innerHTML = '';
+
+                    data.forEach(article => {
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+                        card.innerHTML = `
+                            <div class="card-image">
+                                <img src="${article.image_url}" alt="${article.title}">
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${article.title}</h3>
+                                <p class="card-description">${article.body.substring(0, 100)}...</p>
+                                <div class="card-meta">
+                                    <span class="card-date"><i class="far fa-calendar-alt"></i> ${new Date(article.created_at).toLocaleDateString()}</span>
+                                    <span class="card-category"><i class="fas fa-tag"></i> ${article.category}</span>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-edit" onclick="editArticle(${article.id})"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-delete" onclick="deleteArticle(${article.id})"><i class="fas fa-trash-alt"></i> Delete</button>
+                                </div>
+                            </div>
+                        `;
+
+                        if (article.category === 'news') {
+                            newsContainer.appendChild(card);
+                        } else if (article.category === 'event') {
+                            eventContainer.appendChild(card);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching and parsing articles:', error);
+                    alert('An error occurred while loading articles. Please try again later.');
+                });
+        }
+
+        // Function to handle form submission for creating new articles
+        document.getElementById('newsEventForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('http://localhost:3000/api/createArticle', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                fetchNewsAndEvents();  // Refresh the list of articles
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while creating the article. Please try again later.');
+            });
+        });
+
+        // Function to delete an article
+        function deleteArticle(articleId) {
+            // Display a confirmation dialog and store the user's response
+            const userConfirmed = confirm('Are you sure you want to delete this article?') ;
+            
+            // If the user confirmed, proceed with the deletion
+            if (userConfirmed) {
+                fetch(`http://localhost:3000/api/deleteArticle?id=${articleId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    fetchNewsAndEvents();  // Refresh the list after deletion
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the article. Please try again later.');
+                });
+            } else {
+                console.log('User canceled the deletion.');
+            }
+        }
+
+        // New function to fetch and display gallery images
+        function fetchGalleryImages() {
+            fetch('http://localhost:3000/api/getGalleryImages')
+                .then(response => response.json())
+                .then(images => {
+                    const galleryContainer = document.getElementById('galleryContainer');
+                    galleryContainer.innerHTML = '';
+
+                    images.forEach(image => {
+                        const imageElement = document.createElement('div');
+                        imageElement.classList.add('gallery-card');
+                        imageElement.innerHTML = `
+                            <div class="gallery-card-image">
+                                <img src="${image.image_url}" alt="${image.description}">
+                            </div>
+                            <div class="gallery-card-content">
+                                <p class="gallery-card-description">${image.description}</p>
+                                <button class="delete-btn" onclick="deleteGalleryImage(${image.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        `;
+                        galleryContainer.appendChild(imageElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching gallery images:', error);
+                });
+        }
+
+        // Function to handle gallery image upload
+        document.getElementById('galleryUploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('http://localhost:3000/api/uploadGalleryImage', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                this.reset();
+                fetchGalleryImages();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the image. Please try again later.');
+            });
+        });
+
+        // Function to delete a gallery image
+        function deleteGalleryImage(imageId) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                fetch(`http://localhost:3000/api/deleteGalleryImage?id=${imageId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    fetchGalleryImages();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the image. Please try again later.');
+                });
+            }
+        }
+
+        // Sidebar navigation
+        document.getElementById('manageNewsEvents').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('newsEventsContent').style.display = 'block';
+            document.getElementById('galleryContent').style.display = 'none';
+            this.classList.add('active');
+            document.getElementById('uploadGallery').classList.remove('active');
+        });
+
+        document.getElementById('uploadGallery').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('newsEventsContent').style.display = 'none';
+            document.getElementById('galleryContent').style.display = 'block';
+            this.classList.add('active');
+            document.getElementById('manageNewsEvents').classList.remove('active');
+        });
+    </script>
+</body>
+</html>
